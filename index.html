@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root,
+        [data-theme="dark"] {
+            --bg-primary: #060810;
+            --bg-secondary: #0c0f1a;
+            --bg-tertiary: #131828;
+            --bg-card: rgba(13, 16, 28, 0.6);
+            --border: rgba(60, 75, 120, 0.4);
+            --border-hover: rgba(100, 160, 255, 0.6);
+            --border-glow: rgba(90, 150, 255, 0.18);
+            --text-primary: #e8eeff;
+            --text-secondary: #8898cc;
+            --text-muted: #3d4a72;
+            --accent-blue: #4da8ff;
+            --accent-green: #00f5a0;
+            --accent-red: #ff5577;
+            --accent-purple: #c084fc;
+            --accent-orange: #ffb347;
+            --accent-cyan: #00d4ff;
+            --accent-pink: #ff6ec7;
+            --glass-bg: rgba(13, 16, 28, 0.55);
+            --glass-bg-heavy: rgba(13, 16, 28, 0.82);
+            --glass-border: rgba(55, 70, 120, 0.38);
+            --glass-blur: blur(28px);
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.35);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.45);
+            --shadow-lg: 0 20px 80px rgba(0,0,0,0.55);
+            --shadow-glow: 0 0 60px rgba(77, 168, 255, 0.08);
+            --canvas-node: rgba(77, 168, 255, 0.4);
+            --canvas-line: rgba(77, 168, 255, 0.07);
+            --scrollbar-thumb: #131828;
+            --modal-overlay: rgba(0, 0, 0, 0.72);
+            --inset-bg: rgba(6, 8, 16, 0.6);
+            --orb1: rgba(77, 100, 255, 0.12);
+            --orb2: rgba(192, 80, 255, 0.1);
+            --orb3: rgba(0, 245, 160, 0.07);
+            --orb4: rgba(255, 110, 199, 0.08);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f4ff;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e4eaff;
+            --bg-card: rgba(255, 255, 255, 0.6);
+            --border: rgba(0, 0, 0, 0.07);
+            --border-hover: rgba(59, 130, 246, 0.5);
+            --border-glow: rgba(59, 130, 246, 0.14);
+            --text-primary: #0d1633;
+            --text-secondary: #3d5096;
+            --text-muted: #8897c4;
+            --accent-blue: #2563eb;
+            --accent-green: #059669;
+            --accent-red: #e11d48;
+            --accent-purple: #7c3aed;
+            --accent-orange: #d97706;
+            --accent-cyan: #0284c7;
+            --accent-pink: #db2777;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-bg-heavy: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.06);
+            --glass-blur: blur(28px);
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 80px rgba(0,0,0,0.1);
+            --shadow-glow: 0 0 60px rgba(59, 130, 246, 0.05);
+            --canvas-node: rgba(59, 130, 246, 0.25);
+            --canvas-line: rgba(59, 130, 246, 0.05);
+            --scrollbar-thumb: #e4eaff;
+            --modal-overlay: rgba(13, 22, 51, 0.4);
+            --inset-bg: rgba(0, 0, 0, 0.03);
+            --orb1: rgba(77, 100, 255, 0.06);
+            --orb2: rgba(192, 80, 255, 0.05);
+            --orb3: rgba(0, 200, 130, 0.05);
+            --orb4: rgba(220, 60, 180, 0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.4s ease;
+        }
+
+        /* ── AURORA BACKGROUND ── */
+        .aurora-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .aurora-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: orbFloat linear infinite;
+        }
+
+        .aurora-orb-1 {
+            width: 60vw; height: 60vw;
+            top: -20vw; left: -10vw;
+            background: radial-gradient(circle, var(--orb1), transparent 70%);
+            animation-duration: 25s;
+        }
+        .aurora-orb-2 {
+            width: 50vw; height: 50vw;
+            top: 10vh; right: -15vw;
+            background: radial-gradient(circle, var(--orb2), transparent 70%);
+            animation-duration: 32s;
+            animation-direction: reverse;
+        }
+        .aurora-orb-3 {
+            width: 40vw; height: 40vw;
+            bottom: 5vh; left: 20vw;
+            background: radial-gradient(circle, var(--orb3), transparent 70%);
+            animation-duration: 20s;
+        }
+        .aurora-orb-4 {
+            width: 35vw; height: 35vw;
+            bottom: -10vh; right: 15vw;
+            background: radial-gradient(circle, var(--orb4), transparent 70%);
+            animation-duration: 28s;
+            animation-direction: reverse;
+        }
+
+        @keyframes orbFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            25%  { transform: translate(3vw, 4vh) scale(1.08); }
+            50%  { transform: translate(-2vw, 6vh) scale(0.94); }
+            75%  { transform: translate(-4vw, -3vh) scale(1.04); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* ── TOP GRADIENT BAR ── */
+        #neuralCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                var(--accent-blue),
+                var(--accent-purple),
+                var(--accent-pink),
+                var(--accent-cyan),
+                var(--accent-green),
+                var(--accent-blue)
+            );
+            background-size: 300% 100%;
+            animation: gradientShift 6s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes gradientShift {
+            0%   { background-position: 0% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        @keyframes panelEnter {
+            0%   { opacity: 0; transform: translateY(28px) scale(0.97); }
+            60%  { opacity: 1; transform: translateY(-3px) scale(1.005); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .anim-enter {
+            opacity: 0;
+            animation: panelEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .header             { animation-delay: 0.05s; }
+        .omnibar-container  { animation-delay: 0.14s; }
+        .quick-access .section-label:first-child   { animation-delay: 0.20s; }
+        .quick-access .quick-grid:first-of-type    { animation-delay: 0.24s; }
+        .quick-access .section-label:last-of-type  { animation-delay: 0.29s; }
+        .quick-access .quick-grid:last-of-type     { animation-delay: 0.33s; }
+        .calendar-panel     { animation-delay: 0.38s; }
+        .kanban             { animation-delay: 0.43s; }
+
+        /* ── LAYOUT ── */
+        .dashboard {
+            width: 94%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: clamp(1rem, 2vw, 2rem) clamp(1rem, 3vw, 2.5rem) 6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            text-align: center;
+            padding: clamp(1rem, 3vw, 2.5rem) 0 clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .greeting {
+            font-size: clamp(2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg,
+                var(--text-primary) 0%,
+                var(--accent-cyan) 40%,
+                var(--accent-purple) 70%,
+                var(--accent-pink) 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            filter: drop-shadow(0 0 30px rgba(77,168,255,0.25));
+        }
+
+        .date-display {
+            font-size: clamp(0.72rem, 1.1vw, 0.9rem);
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            opacity: 0.9;
+        }
+
+        /* ── OMNIBAR ── */
+        .omnibar-container {
+            width: min(680px, 82%);
+            max-width: 100%;
+            margin: clamp(1rem, 2.5vw, 2.5rem) auto clamp(0.5rem, 1vw, 1rem);
+            position: relative;
+            z-index: 50;
+        }
+
+        .omnibar-wrapper {
+            position: relative;
+            border-radius: 22px;
+            background: var(--glass-bg);
+            border: 1.5px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .omnibar-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -1.5px;
+            border-radius: 23px;
+            background: linear-gradient(135deg,
+                rgba(77,168,255,0), rgba(192,132,252,0), rgba(0,212,255,0)
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .omnibar-wrapper:focus-within::before {
+            opacity: 1;
+            background: linear-gradient(135deg,
+                rgba(77,168,255,0.5),
+                rgba(192,132,252,0.5),
+                rgba(0,212,255,0.5)
+            );
+        }
+
+        .omnibar-wrapper:focus-within {
+            border-color: transparent;
+            box-shadow: 0 0 0 1px transparent, 0 0 40px rgba(77,168,255,0.2), var(--shadow-lg);
+            transform: scale(1.015);
+            background: var(--glass-bg-heavy);
+        }
+
+        .omnibar {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: clamp(0.95rem, 1.5vw, 1.35rem) 1.5rem clamp(0.95rem, 1.5vw, 1.35rem) 3.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .omnibar::placeholder { color: var(--text-muted); transition: color 0.25s ease; }
+        .omnibar:focus::placeholder,
+        .omnibar-wrapper.focused .omnibar::placeholder { color: rgba(255,255,255,0.78); }
+
+        .omnibar-icon {
+            position: absolute;
+            left: 1.3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-cyan);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            pointer-events: none;
+            transition: color 0.3s;
+            filter: drop-shadow(0 0 6px var(--accent-cyan));
+        }
+
+        .omnibar-hints {
+            text-align: center;
+            margin-top: 0.7rem;
+            font-size: clamp(0.6rem, 0.82vw, 0.7rem);
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            letter-spacing: 0.01em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .omnibar-hints code {
+            color: var(--accent-cyan);
+            background: rgba(0,212,255,0.08);
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0,212,255,0.2);
+        }
+
+        .hint-sep { color: var(--text-muted); opacity: 0.3; }
+
+        /* ── QUICK ACCESS ── */
+        .quick-access {
+            width: 100%;
+            max-width: 100%;
+            margin: clamp(1.5rem, 3vw, 3rem) auto 0;
+        }
+
+        .section-label {
+            font-size: clamp(0.58rem, 0.78vw, 0.68rem);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: clamp(0.6rem, 1vw, 0.85rem);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(77,168,255,0.2), transparent);
+        }
+
+        .section-label i {
+            filter: drop-shadow(0 0 6px currentColor);
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: clamp(0.5rem, 0.8vw, 0.75rem);
+            margin-bottom: clamp(1.5rem, 2.5vw, 2.5rem);
+        }
+
+        /* ── QUICK LINK CARDS ── */
+        .quick-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            padding: clamp(1rem, 1.5vw, 1.4rem) 0.6rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        /* shimmer effect */
+        .quick-link::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 60%;
+            height: 200%;
+            background: linear-gradient(105deg, transparent, rgba(255,255,255,0.06), transparent);
+            transform: skewX(-15deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .quick-link:hover::after { left: 110%; }
+
+        /* glow overlay */
+        .quick-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background: radial-gradient(circle at center, var(--border-glow), transparent 70%);
+            z-index: 0;
+        }
+
+        .quick-link:hover::before { opacity: 1; }
+
+        .quick-link:hover {
+            border-color: var(--border-hover);
+            box-shadow:
+                0 0 0 1px rgba(77,168,255,0.12),
+                var(--shadow-md),
+                0 0 40px rgba(77,168,255,0.1);
+            transform: translateY(-6px) scale(1.03);
+        }
+
+        .quick-link:active {
+            transform: translateY(-2px) scale(1.0);
+            transition-duration: 0.1s;
+        }
+
+        /* Icon pill */
+        .quick-link .icon-pill {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-link:hover .icon-pill {
+            transform: scale(1.14) rotate(-3deg);
+        }
+
+        .quick-link .icon-pill i {
+            font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+        }
+
+        /* Academic pill */
+        .ic-acad-pill {
+            background: linear-gradient(135deg, rgba(255,179,71,0.18), rgba(255,100,80,0.12));
+            border: 1px solid rgba(255,179,71,0.25);
+            box-shadow: 0 0 20px rgba(255,179,71,0.12);
+        }
+        .ic-acad { color: var(--accent-orange); filter: drop-shadow(0 0 5px rgba(255,179,71,0.5)); }
+
+        /* Code pill */
+        .ic-code-pill {
+            background: linear-gradient(135deg, rgba(0,245,160,0.15), rgba(0,212,255,0.1));
+            border: 1px solid rgba(0,245,160,0.22);
+            box-shadow: 0 0 20px rgba(0,245,160,0.1);
+        }
+        .ic-code { color: var(--accent-green); filter: drop-shadow(0 0 5px rgba(0,245,160,0.5)); }
+
+        /* AI pill */
+        .ic-ai-pill {
+            background: linear-gradient(135deg, rgba(192,132,252,0.18), rgba(255,110,199,0.12));
+            border: 1px solid rgba(192,132,252,0.25);
+            box-shadow: 0 0 20px rgba(192,132,252,0.12);
+        }
+        .ic-ai { color: var(--accent-purple); filter: drop-shadow(0 0 5px rgba(192,132,252,0.5)); }
+
+        .quick-link span {
+            font-size: clamp(0.64rem, 0.88vw, 0.76rem);
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+            letter-spacing: 0.01em;
+            position: relative;
+            z-index: 1;
+        }
+        .quick-link:hover span { color: var(--text-primary); }
+
+        /* ── BOTTOM GRID ── */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 1.5vw, 1.5rem);
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ── GLASS PANELS ── */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: clamp(1rem, 1.8vw, 1.7rem);
+            box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.04);
+            transition: border-color 0.35s, box-shadow 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* colored top border accent */
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 10%; right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(77,168,255,0.4),
+                rgba(192,132,252,0.4),
+                transparent
+            );
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(77,168,255,0.25);
+            box-shadow: var(--shadow-md), var(--shadow-glow);
+        }
+
+        .panel-title {
+            font-size: clamp(0.58rem, 0.78vw, 0.68rem);
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .panel-title i { filter: drop-shadow(0 0 6px currentColor); }
+
+        /* ── CALENDAR ── */
+        .calendar-panel { text-align: center; }
+
+        .cal-nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 0.85rem 0 0.75rem;
+        }
+
+        .cal-nav-btn {
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .cal-nav-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0,212,255,0.08);
+            box-shadow: 0 0 16px rgba(0,212,255,0.15);
+            transform: scale(1.1);
+        }
+
+        .cal-month-label {
+            font-size: clamp(0.82rem, 1.1vw, 0.96rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            min-width: 160px;
+            letter-spacing: 0.01em;
+        }
+
+        .cal-day-headers {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cal-day-headers span {
+            font-size: clamp(0.46rem, 0.63vw, 0.54rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 0.3rem 0;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.28rem;
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            gap: 2px;
+            background: transparent;
+        }
+
+        .cal-day:hover {
+            background: rgba(77,168,255,0.07);
+            border-color: rgba(77,168,255,0.3);
+            transform: scale(1.08);
+        }
+
+        .cal-day.today {
+            background: linear-gradient(135deg, rgba(77,168,255,0.15), rgba(0,212,255,0.1));
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 18px rgba(0,212,255,0.2), inset 0 0 10px rgba(0,212,255,0.05);
+        }
+
+        .cal-day.other-month { opacity: 0.22; }
+        .cal-day.other-month:hover { opacity: 0.5; }
+        .cal-day.past:not(.today) { opacity: 0.4; }
+        .cal-day.past:not(.today):hover { opacity: 0.7; }
+        .cal-day.empty { cursor: default; background: transparent; border: none; }
+        .cal-day.empty:hover { transform: none; box-shadow: none; }
+
+        .cal-day-num {
+            font-size: clamp(0.68rem, 0.92vw, 0.8rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .cal-day.today .cal-day-num {
+            color: var(--accent-cyan);
+            filter: drop-shadow(0 0 5px rgba(0,212,255,0.6));
+        }
+        .cal-day.other-month .cal-day-num { color: var(--text-muted); }
+
+        .cal-day-dots {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            margin-top: 0.2rem;
+            min-height: 5px;
+        }
+
+        .cal-dot { width: 4px; height: 4px; border-radius: 50%; }
+        .cal-dot.study { background: var(--accent-orange); box-shadow: 0 0 4px var(--accent-orange); }
+        .cal-dot.dev { background: var(--accent-purple); box-shadow: 0 0 4px var(--accent-purple); }
+
+        .cal-today-wrap { margin-top: 0.8rem; }
+
+        .cal-today-btn {
+            padding: 0.5rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .cal-today-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0,212,255,0.07);
+            box-shadow: 0 0 18px rgba(0,212,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ── CAL MODAL ── */
+        .cal-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(18px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .cal-modal {
+            background: var(--glass-bg-heavy);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 1.7rem;
+            width: 420px;
+            max-width: 92vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlide 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: var(--shadow-lg), 0 0 80px rgba(77,168,255,0.08);
+            position: relative;
+        }
+
+        .cal-modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.5), transparent);
+        }
+
+        .cal-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+
+        .cal-modal-date {
+            font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .cal-modal-close {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.25s;
+        }
+
+        .cal-modal-close:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            box-shadow: 0 0 14px rgba(255,85,119,0.2);
+            transform: scale(1.08);
+        }
+
+        .cal-modal-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .cal-modal-btn {
+            padding: 0.85rem 0.6rem;
+            border-radius: 16px;
+            border: 1.5px solid var(--border);
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-primary);
+        }
+
+        .cal-modal-btn:hover { transform: translateY(-2px) scale(1.02); }
+
+        .cal-modal-btn.study-btn:hover,
+        .cal-modal-btn.study-btn.active {
+            border-color: var(--accent-orange);
+            background: rgba(255,179,71,0.1);
+            box-shadow: 0 0 24px rgba(255,179,71,0.12);
+        }
+
+        .cal-modal-btn.dev-btn:hover,
+        .cal-modal-btn.dev-btn.active {
+            border-color: var(--accent-purple);
+            background: rgba(192,132,252,0.1);
+            box-shadow: 0 0 24px rgba(192,132,252,0.12);
+        }
+
+        .cal-modal-btn i { font-size: 1rem; }
+        .cal-modal-btn.study-btn i { color: var(--accent-orange); }
+        .cal-modal-btn.dev-btn i { color: var(--accent-purple); }
+
+        .cal-modal-input-wrap {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), margin 0.35s ease;
+            margin-bottom: 0;
+        }
+
+        .cal-modal-input-wrap.open {
+            max-height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .cal-modal-input {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            background: var(--inset-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .cal-modal-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+        }
+        .cal-modal-input::placeholder { color: var(--text-muted); }
+
+        .cal-modal-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.2rem 0 0.8rem;
+        }
+
+        .cal-modal-tasks-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .cal-modal-tasks-list { display: flex; flex-direction: column; gap: 0.35rem; }
+
+        .cal-modal-task {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.55rem 0.7rem;
+            background: var(--inset-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            transition: all 0.25s;
+        }
+
+        .cal-modal-task:hover { border-color: var(--border-hover); transform: translateX(3px); }
+        .cal-modal-task-icon { font-size: 0.7rem; flex-shrink: 0; }
+        .cal-modal-task-text { flex: 1; word-break: break-word; line-height: 1.3; }
+
+        .cal-modal-task-del {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.15rem;
+            font-size: 0.65rem;
+            transition: all 0.2s;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+
+        .cal-modal-task:hover .cal-modal-task-del { opacity: 1; }
+        .cal-modal-task-del:hover { color: var(--accent-red); transform: scale(1.2); }
+
+        /* ── KANBAN ── */
+        .kanban { min-height: 360px; }
+
+        .kanban-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .kanban-column {
+            background: var(--inset-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            padding: 0.8rem;
+            min-height: 260px;
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* colored top stripe on columns */
+        .col-study { border-top: 2px solid rgba(255,179,71,0.4); }
+        .col-dev   { border-top: 2px solid rgba(192,132,252,0.4); }
+        .col-done  { border-top: 2px solid rgba(0,245,160,0.4); }
+
+        .kanban-column.drag-over {
+            border-color: var(--accent-cyan);
+            background: rgba(0,212,255,0.05);
+            box-shadow: inset 0 0 30px rgba(0,212,255,0.06);
+            transform: scale(1.01);
+        }
+
+        .kanban-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .kanban-col-title {
+            font-size: clamp(0.58rem, 0.78vw, 0.67rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .col-study .kanban-col-title { color: var(--accent-orange); }
+        .col-dev   .kanban-col-title { color: var(--accent-purple); }
+        .col-done  .kanban-col-title { color: var(--accent-green); }
+
+        .col-study .kanban-col-title i { filter: drop-shadow(0 0 4px rgba(255,179,71,0.6)); }
+        .col-dev   .kanban-col-title i { filter: drop-shadow(0 0 4px rgba(192,132,252,0.6)); }
+        .col-done  .kanban-col-title i { filter: drop-shadow(0 0 4px rgba(0,245,160,0.6)); }
+
+        .kanban-count {
+            font-size: 0.6rem;
+            background: var(--bg-tertiary);
+            padding: 0.12rem 0.5rem;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .kanban-add {
+            width: 100%;
+            padding: 0.52rem 0.75rem;
+            background: var(--inset-bg);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.76rem;
+            outline: none;
+            margin-bottom: 0.6rem;
+            transition: all 0.3s;
+        }
+
+        .kanban-add:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+        }
+
+        .kanban-add::placeholder { color: var(--text-muted); font-size: 0.72rem; }
+
+        .kanban-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 0.38rem;
+            min-height: 80px;
+        }
+
+        .kanban-task {
+            padding: 0.65rem 0.8rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            font-size: 0.78rem;
+            cursor: grab;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            user-select: none;
+        }
+
+        .kanban-task:hover {
+            border-color: rgba(77,168,255,0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 12px rgba(77,168,255,0.06);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .kanban-task:active { cursor: grabbing; }
+        .kanban-task.dragging { opacity: 0.35; transform: scale(0.97); }
+
+        .task-date-tag {
+            font-size: 0.54rem;
+            background: rgba(0,212,255,0.1);
+            color: var(--accent-cyan);
+            padding: 0.1rem 0.35rem;
+            border-radius: 5px;
+            font-family: 'Fira Code', monospace;
+            flex-shrink: 0;
+            white-space: nowrap;
+            border: 1px solid rgba(0,212,255,0.2);
+        }
+
+        .kanban-task-text { flex: 1; word-break: break-word; line-height: 1.35; }
+
+        .col-done .kanban-task .kanban-task-text {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .kanban-task-actions {
+            display: flex;
+            gap: 0.2rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        .kanban-task:hover .kanban-task-actions { opacity: 1; }
+
+        .task-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.2rem;
+            font-size: 0.68rem;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .task-btn:hover { transform: scale(1.25); }
+        .task-btn.btn-done:hover { color: var(--accent-green); filter: drop-shadow(0 0 4px var(--accent-green)); }
+        .task-btn.btn-del:hover  { color: var(--accent-red);  filter: drop-shadow(0 0 4px var(--accent-red)); }
+
+        /* ── TELEMETRY ── */
+        .tele-expanded {
+            position: fixed;
+            bottom: 3.9rem;
+            right: 1.2rem;
+            background: var(--glass-bg-heavy);
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 1.2rem 1.3rem;
+            z-index: 99;
+            width: 540px;
+            max-width: calc(100vw - 2rem);
+            animation: teleSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: var(--shadow-lg), 0 0 60px rgba(77,168,255,0.07);
+        }
+
+        @keyframes teleSlideUp {
+            from { opacity: 0; transform: translateY(16px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tele-exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tele-exp-title {
+            font-size: 0.63rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tele-exp-title i { color: var(--accent-cyan); filter: drop-shadow(0 0 5px var(--accent-cyan)); }
+
+        .tele-exp-close {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.65rem;
+            width: 26px; height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+        }
+
+        .tele-exp-close:hover {
+            color: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 12px rgba(255,85,119,0.2);
+            transform: scale(1.1);
+        }
+
+        .tele-exp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+
+        .tele-metric {
+            background: var(--inset-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 0.8rem 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+        }
+
+        .tele-metric-icon {
+            width: 32px; height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+
+        .tele-metric-icon.mem { color: var(--accent-green); }
+        .tele-metric-icon.gpu { color: var(--accent-purple); }
+        .tele-metric-icon.fps { color: var(--accent-orange); }
+
+        .tele-metric-info { flex: 1; min-width: 0; }
+
+        .tele-metric-label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        .tele-metric-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.72rem;
+            color: var(--text-primary);
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .tele-metric-sub {
+            font-size: 0.58rem;
+            color: var(--text-muted);
+            margin-top: 0.1rem;
+            display: block;
+        }
+
+        .tele-bar {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            margin-top: 0.4rem;
+            overflow: hidden;
+        }
+
+        .tele-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 1.5s ease;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+        }
+
+        .tele-bar-fill.warn { background: linear-gradient(90deg, var(--accent-orange), var(--accent-red)); }
+
+        .tele-sparkline-wrap {
+            margin-top: 0.4rem;
+            width: 100%;
+            height: 36px;
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .tele-sparkline {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+        }
+
+        /* TELEMETRY BAR */
+        .telemetry {
+            position: fixed;
+            bottom: 1rem;
+            right: 1.2rem;
+            background: var(--glass-bg-heavy);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.72rem;
+            z-index: 100;
+            box-shadow: var(--shadow-md), 0 0 40px rgba(0,0,0,0.3);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .telemetry:hover {
+            border-color: rgba(77,168,255,0.3);
+            box-shadow: var(--shadow-md), 0 0 40px rgba(77,168,255,0.07);
+        }
+
+        .tele-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--text-secondary);
+        }
+
+        .tele-item i { font-size: 0.8rem; }
+        .tele-div { width: 1px; height: 14px; background: var(--border); }
+        .tele-bat i { color: var(--accent-green); filter: drop-shadow(0 0 4px rgba(0,245,160,0.5)); }
+
+        .tele-net i {
+            color: var(--accent-cyan);
+            filter: drop-shadow(0 0 4px rgba(0,212,255,0.5));
+            animation: netPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes netPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .tele-clock {
+            font-family: 'Fira Code', monospace;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.72rem;
+        }
+
+        .tele-expand-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 28px; height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .tele-expand-btn:hover {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 14px rgba(0,212,255,0.2);
+            transform: scale(1.1);
+        }
+
+        .tele-expand-btn.active {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            background: rgba(0,212,255,0.08);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 28px; height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 14px rgba(255,179,71,0.2);
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-style: italic;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .bottom-grid { grid-template-columns: 1fr; }
+            .omnibar-container { width: 90%; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard { padding: 1rem 1rem 5rem; width: 98%; }
+            .greeting { font-size: 2rem; }
+            .quick-grid { grid-template-columns: repeat(3, 1fr); }
+            .kanban-columns { grid-template-columns: 1fr; }
+            .omnibar-container { width: 96%; }
+            .tele-expanded { width: calc(100vw - 2rem); right: 1rem; }
+            .tele-exp-grid { grid-template-columns: 1fr; }
+            .telemetry { bottom: 0.5rem; right: 0.5rem; font-size: 0.65rem; padding: 0.5rem 0.7rem; gap: 0.6rem; }
+            .aurora-orb { filter: blur(60px); }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard { width: 100%; padding: 0.75rem 0.75rem 5rem; }
+            .greeting { font-size: 1.6rem; }
+            .quick-grid { grid-template-columns: repeat(2, 1fr); }
+            .omnibar-container { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Aurora background orbs -->
+    <div class="aurora-container" aria-hidden="true">
+        <div class="aurora-orb aurora-orb-1"></div>
+        <div class="aurora-orb aurora-orb-2"></div>
+        <div class="aurora-orb aurora-orb-3"></div>
+        <div class="aurora-orb aurora-orb-4"></div>
+    </div>
+
+    <canvas id="neuralCanvas"></canvas>
+    <div class="omnibar-backdrop" id="omnibarBackdrop"></div>
+
+    <div class="dashboard" id="dashboard">
+        <header class="header anim-enter">
+            <h1 class="greeting" id="greeting"><script>var _h=new Date().getHours();document.write(_h>=5&&_h<12?'Good Morning':_h>=12&&_h<17?'Good Afternoon':_h>=21||_h<5?'Night Owl Mode':'Good Evening')</script></h1>
+            <p class="date-display" id="dateDisplay"><script>document.write(new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}))</script></p>
+        </header>
+
+        <div class="omnibar-container anim-enter">
+            <div class="omnibar-wrapper">
+                <span class="omnibar-icon">❯</span>
+                <input type="text" class="omnibar" id="omnibar" placeholder="Search Google or type a command..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="omnibar-hints">
+                <code>/ai</code> Gemini
+                <span class="hint-sep">·</span>
+                <code>/ai query</code> Perplexity
+                <span class="hint-sep">·</span>
+                <code>/yt query</code> YouTube
+                <span class="hint-sep">·</span>
+                <code>/gh query</code> GitHub
+            </div>
+        </div>
+
+        <div class="quick-access">
+            <div class="section-label anim-enter">
+                <i class="fa-solid fa-graduation-cap" style="color: var(--accent-orange)"></i>
+                Academics · ICSE
+            </div>
+            <div class="quick-grid anim-enter">
+                <a href="https://www.knowledgeboat.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-ship ic-acad"></i></div>
+                    <span>Knowledge Boat</span>
+                </a>
+                <a href="https://www.shaalaa.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-graduation-cap ic-acad"></i></div>
+                    <span>Shaalaa</span>
+                </a>
+                <a href="https://brainly.in" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-brain ic-acad"></i></div>
+                    <span>Brainly.in</span>
+                </a>
+                <a href="https://www.cisce.org" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-building-columns ic-acad"></i></div>
+                    <span>CISCE.org</span>
+                </a>
+                <a href="https://www.scribd.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-book-open-reader ic-acad"></i></div>
+                    <span>Scribd</span>
+                </a>
+                <a href="https://notebooklm.google.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-acad-pill"><i class="fa-solid fa-book ic-acad"></i></div>
+                    <span>NotebookLM</span>
+                </a>
+            </div>
+
+            <div class="section-label anim-enter">
+                <i class="fa-solid fa-terminal" style="color: var(--accent-green)"></i>
+                Code & AI Stack
+            </div>
+            <div class="quick-grid anim-enter">
+                <a href="https://github.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-code-pill"><i class="fa-brands fa-github ic-code"></i></div>
+                    <span>GitHub</span>
+                </a>
+                <a href="https://chat.deepseek.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-microchip ic-ai"></i></div>
+                    <span>DeepSeek</span>
+                </a>
+                <a href="https://claude.ai" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-message ic-ai"></i></div>
+                    <span>Claude</span>
+                </a>
+                <a href="https://grok.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-bolt-lightning ic-ai"></i></div>
+                    <span>Grok</span>
+                </a>
+                <a href="https://chatgpt.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-comments ic-ai"></i></div>
+                    <span>ChatGPT</span>
+                </a>
+                <a href="https://gemini.google.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-star ic-ai"></i></div>
+                    <span>Gemini</span>
+                </a>
+                <a href="https://z.ai" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-ai-pill"><i class="fa-solid fa-wand-magic-sparkles ic-ai"></i></div>
+                    <span>z.ai</span>
+                </a>
+                <a href="https://www.w3schools.com" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-code-pill"><i class="fa-solid fa-graduation-cap ic-code"></i></div>
+                    <span>W3Schools</span>
+                </a>
+                <a href="https://www.online-ide.com/" target="_blank" rel="noopener" class="quick-link">
+                    <div class="icon-pill ic-code-pill"><i class="fa-solid fa-laptop-code ic-code"></i></div>
+                    <span>Online IDE</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+            <div class="glass-panel calendar-panel anim-enter">
+                <div class="panel-title" style="justify-content: center;">
+                    <i class="fa-solid fa-calendar-days" style="color: var(--accent-cyan);"></i>
+                    Monthly Calendar
+                </div>
+                <div class="cal-nav-row">
+                    <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <span class="cal-month-label" id="calMonthLabel"></span>
+                    <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="cal-day-headers">
+                    <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+                <div class="cal-today-wrap">
+                    <button class="cal-today-btn" id="calToday"><i class="fa-solid fa-crosshairs"></i> Today</button>
+                </div>
+            </div>
+
+            <div class="glass-panel kanban anim-enter">
+                <div class="panel-title">
+                    <i class="fa-solid fa-table-columns" style="color: var(--accent-cyan);"></i>
+                    Task Board
+                </div>
+                <div class="kanban-columns" id="kanbanBoard">
+                    <div class="kanban-column col-study" data-col="study">
+                        <div class="kanban-col-header">
+                            <div class="kanban-col-title"><i class="fa-solid fa-book-open"></i> Study</div>
+                            <span class="kanban-count" data-count="study">0</span>
+                        </div>
+                        <input class="kanban-add" data-col="study" placeholder="+ Add study task...">
+                        <div class="kanban-tasks" data-tasks="study"></div>
+                    </div>
+                    <div class="kanban-column col-dev" data-col="dev">
+                        <div class="kanban-col-header">
+                            <div class="kanban-col-title"><i class="fa-solid fa-code"></i> Dev</div>
+                            <span class="kanban-count" data-count="dev">0</span>
+                        </div>
+                        <input class="kanban-add" data-col="dev" placeholder="+ Add dev task...">
+                        <div class="kanban-tasks" data-tasks="dev"></div>
+                    </div>
+                    <div class="kanban-column col-done" data-col="done">
+                        <div class="kanban-col-header">
+                            <div class="kanban-col-title"><i class="fa-solid fa-circle-check"></i> Done</div>
+                            <span class="kanban-count" data-count="done">0</span>
+                        </div>
+                        <div class="kanban-tasks" data-tasks="done"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cal-modal-overlay" id="calModal" style="display: none;">
+        <div class="cal-modal">
+            <div class="cal-modal-header">
+                <span class="cal-modal-date" id="calModalDate"></span>
+                <button class="cal-modal-close" id="calModalClose"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="cal-modal-btns">
+                <button class="cal-modal-btn study-btn" id="calAddStudy">
+                    <i class="fa-solid fa-book-open"></i> Study Task
+                </button>
+                <button class="cal-modal-btn dev-btn" id="calAddDev">
+                    <i class="fa-solid fa-code"></i> Dev Task
+                </button>
+            </div>
+            <div class="cal-modal-input-wrap" id="calInputWrap">
+                <input class="cal-modal-input" id="calModalInput" placeholder="Type task and press Enter...">
+            </div>
+            <div class="cal-modal-divider"></div>
+            <div class="cal-modal-tasks-label">Scheduled Tasks</div>
+            <div class="cal-modal-tasks-list" id="calModalTasks"></div>
+        </div>
+    </div>
+
+    <div class="tele-expanded" id="teleExpanded" style="display: none;">
+        <div class="tele-exp-header">
+            <span class="tele-exp-title"><i class="fa-solid fa-chart-line"></i> System Monitor</span>
+            <button class="tele-exp-close" id="teleExpClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="tele-exp-grid">
+            <div class="tele-metric">
+                <div class="tele-metric-icon"><i class="fa-solid fa-microchip"></i></div>
+                <div class="tele-metric-info">
+                    <span class="tele-metric-label">Processor</span>
+                    <span class="tele-metric-value" id="cpuValue">—</span>
+                    <span class="tele-metric-sub" id="cpuSub"></span>
+                </div>
+            </div>
+            <div class="tele-metric">
+                <div class="tele-metric-icon mem"><i class="fa-solid fa-memory"></i></div>
+                <div class="tele-metric-info">
+                    <span class="tele-metric-label">Memory (JS Heap)</span>
+                    <span class="tele-metric-value" id="memValue">—</span>
+                    <div class="tele-bar"><div class="tele-bar-fill" id="memBar" style="width: 0%"></div></div>
+                    <div class="tele-sparkline-wrap">
+                        <canvas class="tele-sparkline" id="memChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="tele-metric">
+                <div class="tele-metric-icon gpu"><i class="fa-solid fa-display"></i></div>
+                <div class="tele-metric-info">
+                    <span class="tele-metric-label">GPU Renderer</span>
+                    <span class="tele-metric-value" id="gpuValue">—</span>
+                    <span class="tele-metric-sub" id="gpuSub"></span>
+                </div>
+            </div>
+            <div class="tele-metric">
+                <div class="tele-metric-icon fps"><i class="fa-solid fa-gauge-high"></i></div>
+                <div class="tele-metric-info">
+                    <span class="tele-metric-label">Frame Rate</span>
+                    <span class="tele-metric-value" id="fpsValue">—</span>
+                    <div class="tele-sparkline-wrap">
+                        <canvas class="tele-sparkline" id="fpsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="telemetry" id="telemetry">
+        <div class="tele-item tele-bat">
+            <i class="fa-solid fa-battery-three-quarters" id="batIcon"></i>
+            <span id="batLevel">—</span>
+        </div>
+        <div class="tele-div"></div>
+        <div class="tele-item tele-net">
+            <i class="fa-solid fa-wifi"></i>
+            <span id="netType">—</span>
+        </div>
+        <div class="tele-div"></div>
+        <div class="tele-item tele-clock" id="liveClock">—</div>
+        <div class="tele-div"></div>
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+        <button class="tele-expand-btn" id="teleExpandBtn" title="System Monitor">
+            <i class="fa-solid fa-chevron-up" id="teleExpandIcon"></i>
+        </button>
+    </div>
+
+    <script>
+        const $ = s => document.querySelector(s);
+        const $$ = s => document.querySelectorAll(s);
+
+        function escHtml(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        function escAttr(s) {
+            return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        (function offlineNuke() {
+            let nuked = false;
+            function nuke() {
+                if (nuked) return;
+                nuked = true;
+                try { window.open('', '_self', ''); window.close(); } catch (e) {}
+                setTimeout(() => {
+                    document.body.innerHTML = '';
+                    document.body.style.cssText = 'margin:0;padding:0;background:#000;display:flex;justify-content:center;align-items:center;height:100vh;width:100vw;overflow:hidden;';
+                    const box = document.createElement('div');
+                    box.style.cssText = 'font-family:"Fira Code",monospace;color:#ff0033;font-size:clamp(0.9rem,2.5vw,1.4rem);text-align:center;padding:2.5rem;border:2px solid #ff0033;max-width:720px;line-height:2;text-shadow:0 0 30px rgba(255,0,51,0.4);animation:nukePulse 2s ease-in-out infinite;';
+                    const style = document.createElement('style');
+                    style.textContent = '@keyframes nukePulse{0%,100%{opacity:1}50%{opacity:.6}}*{cursor:none!important}';
+                    document.head.appendChild(style);
+                    box.innerHTML = '<div style="font-size:2.5rem;margin-bottom:1rem;">⚠</div>CRITICAL ERROR: NETWORK DISCONNECTED<br><span style="opacity:.7;font-size:0.85em;">GET BACK ONLINE TO STUDY.</span>';
+                    document.body.appendChild(box);
+                    document.addEventListener('keydown', e => { e.preventDefault(); e.stopPropagation(); }, true);
+                    document.addEventListener('contextmenu', e => e.preventDefault(), true);
+                }, 150);
+            }
+            if (!navigator.onLine) nuke();
+            window.addEventListener('offline', nuke);
+            window.addEventListener('online', () => location.reload());
+        })();
+
+        (function initTheme() {
+            const html = document.documentElement;
+            const mq = window.matchMedia('(prefers-color-scheme: dark)');
+            let userPref = localStorage.getItem('_theme_pref');
+
+            function apply(theme) {
+                html.dataset.theme = theme;
+                const icon = $('#themeIcon');
+                if (icon) {
+                    icon.className = theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+                }
+                if (window._neuralCanvas) window._neuralCanvas.updateTheme();
+            }
+
+            if (userPref) {
+                apply(userPref);
+            } else {
+                apply(mq.matches ? 'dark' : 'light');
+            }
+
+            mq.addEventListener('change', e => {
+                if (!localStorage.getItem('_theme_pref')) {
+                    apply(e.matches ? 'dark' : 'light');
+                }
+            });
+
+            $('#themeToggle').addEventListener('click', () => {
+                const current = html.dataset.theme;
+                const next = current === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('_theme_pref', next);
+                apply(next);
+            });
+        })();
+
+        (function initNeuralCanvas() {
+            const canvas = $('#neuralCanvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, nodes = [], mouseX = -1000, mouseY = -1000;
+            const NODE_COUNT = 55;
+            const CONNECT_DIST = 180;
+            const MOUSE_RADIUS = 200;
+
+            function resize() {
+                const dpr = window.devicePixelRatio || 1;
+                w = window.innerWidth;
+                h = window.innerHeight;
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            function createNodes() {
+                nodes = [];
+                for (let i = 0; i < NODE_COUNT; i++) {
+                    nodes.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        vx: (Math.random() - 0.5) * 0.35,
+                        vy: (Math.random() - 0.5) * 0.35,
+                        r: Math.random() * 2 + 1.2
+                    });
+                }
+            }
+
+            function getColors() {
+                const style = getComputedStyle(document.documentElement);
+                return {
+                    node: style.getPropertyValue('--canvas-node').trim(),
+                    line: style.getPropertyValue('--canvas-line').trim()
+                };
+            }
+
+            let colors = { node: 'rgba(77,168,255,0.4)', line: 'rgba(77,168,255,0.07)' };
+
+            function updateTheme() {
+                colors = getColors();
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+
+                for (let i = 0; i < nodes.length; i++) {
+                    const n = nodes[i];
+                    n.x += n.vx;
+                    n.y += n.vy;
+
+                    if (n.x < 0 || n.x > w) n.vx *= -1;
+                    if (n.y < 0 || n.y > h) n.vy *= -1;
+
+                    const dx = mouseX - n.x;
+                    const dy = mouseY - n.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < MOUSE_RADIUS && dist > 0) {
+                        const force = (1 - dist / MOUSE_RADIUS) * 0.015;
+                        n.vx += dx * force;
+                        n.vy += dy * force;
+                    }
+
+                    const speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
+                    if (speed > 0.8) {
+                        n.vx *= 0.98;
+                        n.vy *= 0.98;
+                    }
+                }
+
+                ctx.strokeStyle = colors.line;
+                ctx.lineWidth = 0.6;
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const dx = nodes[i].x - nodes[j].x;
+                        const dy = nodes[i].y - nodes[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < CONNECT_DIST) {
+                            ctx.globalAlpha = 1 - dist / CONNECT_DIST;
+                            ctx.beginPath();
+                            ctx.moveTo(nodes[i].x, nodes[i].y);
+                            ctx.lineTo(nodes[j].x, nodes[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                ctx.globalAlpha = 1;
+                for (const n of nodes) {
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+                    ctx.fillStyle = colors.node;
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            resize();
+            createNodes();
+            setTimeout(() => { colors = getColors(); }, 50);
+            draw();
+
+            window.addEventListener('resize', () => {
+                resize();
+                if (nodes.length === 0) createNodes();
+            });
+
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            document.addEventListener('mouseleave', () => {
+                mouseX = -1000;
+                mouseY = -1000;
+            });
+
+            window._neuralCanvas = { updateTheme };
+        })();
+
+        (function initGreeting() {
+            function update() {
+                const h = new Date().getHours();
+                let g = 'Good Evening';
+                if (h >= 5 && h < 12) g = 'Good Morning';
+                else if (h >= 12 && h < 17) g = 'Good Afternoon';
+                else if (h >= 21 || h < 5) g = 'Night Owl Mode';
+                $('#greeting').textContent = g;
+                const now = new Date();
+                $('#dateDisplay').textContent = now.toLocaleDateString('en-US', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+            update();
+            setInterval(update, 30000);
+        })();
+
+        (function initOmnibar() {
+            const input = $('#omnibar');
+            const wrapper = input.closest('.omnibar-wrapper');
+
+            function setFocused(on) {
+                wrapper.classList.toggle('focused', on);
+            }
+
+            input.addEventListener('focus', () => setFocused(true));
+            input.addEventListener('blur',  () => setFocused(false));
+
+
+            const commands = [
+                { prefix: '/ai', handler(q) {
+                    if (!q) { window.open('https://gemini.google.com', '_blank'); }
+                    else { window.open('https://www.perplexity.ai/search?q=' + encodeURIComponent(q), '_blank'); }
+                }},
+                { prefix: '/yt', handler(q) {
+                    if (q) window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(q), '_blank');
+                }},
+                { prefix: '/gh', handler(q) {
+                    if (q) window.open('https://github.com/search?q=' + encodeURIComponent(q), '_blank');
+                }}
+            ];
+
+            function parseCommand(raw) {
+                for (const cmd of commands) {
+                    if (raw === cmd.prefix) return { handler: cmd.handler, query: '' };
+                    if (raw.startsWith(cmd.prefix + ' ')) return { handler: cmd.handler, query: raw.slice(cmd.prefix.length + 1).trim() };
+                    if (raw.startsWith(cmd.prefix) && raw.length > cmd.prefix.length && raw[cmd.prefix.length] !== '/') {
+                        return { handler: cmd.handler, query: raw.slice(cmd.prefix.length).trim() };
+                    }
+                }
+                return null;
+            }
+
+            input.addEventListener('keydown', e => {
+                if (e.key !== 'Enter') return;
+                const raw = input.value.trim();
+                if (!raw) return;
+                const match = parseCommand(raw);
+                if (match) {
+                    match.handler(match.query);
+                } else {
+                    window.open('https://www.google.com/search?q=' + encodeURIComponent(raw), '_blank');
+                }
+                input.value = '';
+            });
+        })();
+
+        const KanbanAPI = (function initKanban() {
+            const STORAGE_KEY = '_kanban_data';
+            let data = { study: [], dev: [], done: [] };
+
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    ['study', 'dev', 'done'].forEach(col => {
+                        if (parsed[col]) {
+                            data[col] = parsed[col].map(t => typeof t === 'string' ? { text: t } : t);
+                        }
+                    });
+                }
+            } catch (e) {}
+
+            function save() {
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+            }
+
+            function formatShortDate(ds) {
+                const d = new Date(ds + 'T00:00:00');
+                const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                return m[d.getMonth()] + ' ' + d.getDate();
+            }
+
+            function render() {
+                ['study', 'dev', 'done'].forEach(col => {
+                    const container = document.querySelector('[data-tasks="' + col + '"]');
+                    const counter = document.querySelector('[data-count="' + col + '"]');
+                    counter.textContent = data[col].length;
+                    container.innerHTML = '';
+
+                    if (data[col].length === 0) {
+                        container.innerHTML = '<div class="empty-state">No tasks</div>';
+                        return;
+                    }
+
+                    data[col].forEach((task, i) => {
+                        const el = document.createElement('div');
+                        el.className = 'kanban-task';
+                        el.draggable = true;
+
+                        const dateTag = task.date ? '<span class="task-date-tag">' + formatShortDate(task.date) + '</span>' : '';
+
+                        let actions = '';
+                        if (col !== 'done') {
+                            actions += '<button class="task-btn btn-done" data-action="done" data-col="' + col + '" data-idx="' + i + '" title="Complete"><i class="fa-solid fa-check"></i></button>';
+                        }
+                        actions += '<button class="task-btn btn-del" data-action="delete" data-col="' + col + '" data-idx="' + i + '" title="Delete"><i class="fa-solid fa-xmark"></i></button>';
+
+                        el.innerHTML = dateTag + '<span class="kanban-task-text">' + escHtml(task.text) + '</span><div class="kanban-task-actions">' + actions + '</div>';
+
+                        el.addEventListener('dragstart', e => {
+                            el.classList.add('dragging');
+                            e.dataTransfer.effectAllowed = 'move';
+                            e.dataTransfer.setData('application/json', JSON.stringify({ col, idx: i }));
+                        });
+                        el.addEventListener('dragend', () => el.classList.remove('dragging'));
+
+                        container.appendChild(el);
+                    });
+                });
+            }
+
+            document.getElementById('kanbanBoard').addEventListener('click', e => {
+                const btn = e.target.closest('[data-action]');
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const col = btn.dataset.col;
+                const idx = parseInt(btn.dataset.idx);
+
+                if (action === 'done') {
+                    const task = data[col].splice(idx, 1)[0];
+                    data.done.push(task);
+                } else if (action === 'delete') {
+                    data[col].splice(idx, 1);
+                }
+                save();
+                render();
+                if (window._calRender) window._calRender();
+            });
+
+            $$('.kanban-column').forEach(colEl => {
+                colEl.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    colEl.classList.add('drag-over');
+                });
+                colEl.addEventListener('dragleave', e => {
+                    if (!colEl.contains(e.relatedTarget)) colEl.classList.remove('drag-over');
+                });
+                colEl.addEventListener('drop', e => {
+                    e.preventDefault();
+                    colEl.classList.remove('drag-over');
+                    const targetCol = colEl.dataset.col;
+                    try {
+                        const src = JSON.parse(e.dataTransfer.getData('application/json'));
+                        if (src.col === targetCol) return;
+                        const task = data[src.col].splice(src.idx, 1)[0];
+                        data[targetCol].push(task);
+                        save();
+                        render();
+                        if (window._calRender) window._calRender();
+                    } catch (err) {}
+                });
+            });
+
+            $$('.kanban-add').forEach(input => {
+                input.addEventListener('keydown', e => {
+                    if (e.key !== 'Enter') return;
+                    const text = input.value.trim();
+                    if (!text) return;
+                    const col = input.dataset.col;
+                    data[col].push({ text });
+                    save();
+                    render();
+                    input.value = '';
+                });
+            });
+
+            render();
+
+            return {
+                getData: () => data,
+                addTask(col, text, date) {
+                    data[col].push({ text, date: date || null });
+                    save();
+                    render();
+                },
+                removeTask(col, text, date) {
+                    const idx = data[col].findIndex(t => t.text === text && t.date === date);
+                    if (idx !== -1) {
+                        data[col].splice(idx, 1);
+                        save();
+                        render();
+                    }
+                },
+                render
+            };
+        })();
+
+        (function initCalendar() {
+            const now = new Date();
+            let currentYear = now.getFullYear();
+            let currentMonth = now.getMonth();
+            let selectedDate = null;
+            let selectedType = null;
+
+            const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+            function dateKey(d) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                return y + '-' + m + '-' + dd;
+            }
+
+            function getTasksForDate(dk) {
+                const result = [];
+                const kanban = KanbanAPI.getData();
+                ['study', 'dev'].forEach(col => {
+                    kanban[col].forEach(task => {
+                        if (task.date === dk) result.push({ text: task.text, type: col });
+                    });
+                });
+                kanban.done.forEach(task => {
+                    if (task.date === dk) result.push({ text: task.text, type: 'done' });
+                });
+                return result;
+            }
+
+            function renderCalendar() {
+                $('#calMonthLabel').textContent = MONTH_NAMES[currentMonth] + ' ' + currentYear;
+
+                const grid = $('#calGrid');
+                grid.innerHTML = '';
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayKey = dateKey(today);
+
+                const firstDay = new Date(currentYear, currentMonth, 1);
+                const lastDay = new Date(currentYear, currentMonth + 1, 0);
+                const daysInMonth = lastDay.getDate();
+
+                let startDow = firstDay.getDay();
+                startDow = startDow === 0 ? 6 : startDow - 1;
+
+                const prevMonthLast = new Date(currentYear, currentMonth, 0);
+                const prevMonthDays = prevMonthLast.getDate();
+
+                for (let i = startDow - 1; i >= 0; i--) {
+                    const dayNum = prevMonthDays - i;
+                    const d = new Date(currentYear, currentMonth - 1, dayNum);
+                    const dk = dateKey(d);
+                    const tasks = getTasksForDate(dk);
+
+                    const cell = document.createElement('div');
+                    cell.className = 'cal-day other-month';
+
+                    let dots = buildDots(tasks);
+                    cell.innerHTML = '<div class="cal-day-num">' + dayNum + '</div><div class="cal-day-dots">' + dots + '</div>';
+                    cell.addEventListener('click', () => openModal(d));
+                    grid.appendChild(cell);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const d = new Date(currentYear, currentMonth, day);
+                    const dk = dateKey(d);
+                    const isToday = dk === todayKey;
+                    const dCopy = new Date(d);
+                    dCopy.setHours(0, 0, 0, 0);
+                    const isPast = dCopy < today;
+
+                    const cell = document.createElement('div');
+                    cell.className = 'cal-day' + (isToday ? ' today' : '') + (isPast && !isToday ? ' past' : '');
+
+                    const tasks = getTasksForDate(dk);
+                    let dots = buildDots(tasks);
+
+                    cell.innerHTML = '<div class="cal-day-num">' + day + '</div><div class="cal-day-dots">' + dots + '</div>';
+                    cell.addEventListener('click', () => openModal(d));
+                    grid.appendChild(cell);
+                }
+
+                const totalCells = startDow + daysInMonth;
+                const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+                for (let i = 1; i <= remaining; i++) {
+                    const d = new Date(currentYear, currentMonth + 1, i);
+                    const dk = dateKey(d);
+                    const tasks = getTasksForDate(dk);
+
+                    const cell = document.createElement('div');
+                    cell.className = 'cal-day other-month';
+
+                    let dots = buildDots(tasks);
+                    cell.innerHTML = '<div class="cal-day-num">' + i + '</div><div class="cal-day-dots">' + dots + '</div>';
+                    cell.addEventListener('click', () => openModal(d));
+                    grid.appendChild(cell);
+                }
+            }
+
+            function buildDots(tasks) {
+                const studyCount = tasks.filter(t => t.type === 'study').length;
+                const devCount = tasks.filter(t => t.type === 'dev').length;
+                const doneCount = tasks.filter(t => t.type === 'done').length;
+                let dots = '';
+                for (let x = 0; x < Math.min(studyCount, 2); x++) dots += '<span class="cal-dot study"></span>';
+                for (let x = 0; x < Math.min(devCount, 2); x++) dots += '<span class="cal-dot dev"></span>';
+                for (let x = 0; x < Math.min(doneCount, 1); x++) dots += '<span class="cal-dot" style="background:var(--accent-green);box-shadow:0 0 4px var(--accent-green)"></span>';
+                return dots;
+            }
+
+            function openModal(date) {
+                selectedDate = date;
+                selectedType = null;
+                $('#calModal').style.display = 'flex';
+                $('#calModalDate').textContent = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                $('#calInputWrap').classList.remove('open');
+                $('#calModalInput').value = '';
+                $('#calAddStudy').classList.remove('active');
+                $('#calAddDev').classList.remove('active');
+                renderModalTasks();
+            }
+
+            function renderModalTasks() {
+                const dk = dateKey(selectedDate);
+                const tasks = getTasksForDate(dk);
+                const container = $('#calModalTasks');
+
+                if (tasks.length === 0) {
+                    container.innerHTML = '<div class="empty-state">No tasks for this date</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                tasks.forEach(task => {
+                    const el = document.createElement('div');
+                    el.className = 'cal-modal-task';
+                    const iconClass = task.type === 'study' ? 'fa-book-open' : task.type === 'dev' ? 'fa-code' : 'fa-circle-check';
+                    const iconColor = task.type === 'study' ? 'var(--accent-orange)' : task.type === 'dev' ? 'var(--accent-purple)' : 'var(--accent-green)';
+
+                    el.innerHTML = '<i class="fa-solid ' + iconClass + ' cal-modal-task-icon" style="color:' + iconColor + '"></i>' +
+                        '<span class="cal-modal-task-text">' + escHtml(task.text) + '</span>' +
+                        (task.type !== 'done' ? '<button class="cal-modal-task-del" data-type="' + task.type + '" data-text="' + escAttr(task.text) + '" data-date="' + dk + '"><i class="fa-solid fa-xmark"></i></button>' : '');
+
+                    container.appendChild(el);
+                });
+            }
+
+            $('#calAddStudy').addEventListener('click', () => {
+                selectedType = 'study';
+                $('#calAddStudy').classList.add('active');
+                $('#calAddDev').classList.remove('active');
+                $('#calInputWrap').classList.add('open');
+                const inp = $('#calModalInput');
+                inp.placeholder = 'Enter study task...';
+                inp.focus();
+            });
+
+            $('#calAddDev').addEventListener('click', () => {
+                selectedType = 'dev';
+                $('#calAddDev').classList.add('active');
+                $('#calAddStudy').classList.remove('active');
+                $('#calInputWrap').classList.add('open');
+                const inp = $('#calModalInput');
+                inp.placeholder = 'Enter dev task...';
+                inp.focus();
+            });
+
+            $('#calModalInput').addEventListener('keydown', e => {
+                if (e.key !== 'Enter') return;
+                const text = e.target.value.trim();
+                if (!text || !selectedType || !selectedDate) return;
+                const dk = dateKey(selectedDate);
+                KanbanAPI.addTask(selectedType, text, dk);
+                e.target.value = '';
+                renderModalTasks();
+                renderCalendar();
+            });
+
+            $('#calModalClose').addEventListener('click', () => { $('#calModal').style.display = 'none'; });
+
+            $('#calModal').addEventListener('click', e => {
+                if (e.target.id === 'calModal') $('#calModal').style.display = 'none';
+            });
+
+            $('#calModalTasks').addEventListener('click', e => {
+                const btn = e.target.closest('.cal-modal-task-del');
+                if (!btn) return;
+                KanbanAPI.removeTask(btn.dataset.type, btn.dataset.text, btn.dataset.date);
+                renderModalTasks();
+                renderCalendar();
+            });
+
+            $('#calPrev').addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                renderCalendar();
+            });
+
+            $('#calNext').addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                renderCalendar();
+            });
+
+            $('#calToday').addEventListener('click', () => {
+                const t = new Date();
+                currentYear = t.getFullYear();
+                currentMonth = t.getMonth();
+                renderCalendar();
+            });
+
+            window._calRender = renderCalendar;
+            renderCalendar();
+        })();
+
+        (function initTelemetry() {
+            function updateClock() {
+                const now = new Date();
+                $('#liveClock').textContent = now.toLocaleTimeString('en-US', {
+                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                });
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(bat => {
+                    function update() {
+                        const lvl = Math.round(bat.level * 100);
+                        $('#batLevel').textContent = lvl + '%';
+                        const icon = $('#batIcon');
+                        icon.style.color = '';
+                        if (bat.charging) {
+                            icon.className = 'fa-solid fa-plug';
+                            icon.style.color = 'var(--accent-cyan)';
+                        } else if (lvl > 75) {
+                            icon.className = 'fa-solid fa-battery-full';
+                        } else if (lvl > 50) {
+                            icon.className = 'fa-solid fa-battery-three-quarters';
+                        } else if (lvl > 25) {
+                            icon.className = 'fa-solid fa-battery-half';
+                            icon.style.color = 'var(--accent-orange)';
+                        } else {
+                            icon.className = 'fa-solid fa-battery-quarter';
+                            icon.style.color = 'var(--accent-red)';
+                        }
+                    }
+                    update();
+                    bat.addEventListener('levelchange', update);
+                    bat.addEventListener('chargingchange', update);
+                });
+            } else {
+                $('#batLevel').textContent = 'N/A';
+            }
+
+            function updateNet() {
+                if ('connection' in navigator) {
+                    const c = navigator.connection;
+                    const t = c.effectiveType || c.type || '—';
+                    $('#netType').textContent = t.toUpperCase();
+                } else {
+                    $('#netType').textContent = navigator.onLine ? 'Online' : 'Offline';
+                }
+            }
+            updateNet();
+            if ('connection' in navigator) navigator.connection.addEventListener('change', updateNet);
+
+            let expanded = false;
+            const panel = $('#teleExpanded');
+            const btn = $('#teleExpandBtn');
+            const icon = $('#teleExpandIcon');
+
+            btn.addEventListener('click', () => {
+                expanded = !expanded;
+                panel.style.display = expanded ? '' : 'none';
+                btn.classList.toggle('active', expanded);
+                icon.className = expanded ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+                if (expanded) {
+                    setTimeout(resizeCanvases, 50);
+                }
+            });
+
+            $('#teleExpClose').addEventListener('click', () => {
+                expanded = false;
+                panel.style.display = 'none';
+                btn.classList.remove('active');
+                icon.className = 'fa-solid fa-chevron-up';
+            });
+
+            const cores = navigator.hardwareConcurrency || '—';
+            const platform = navigator.platform || navigator.userAgentData?.platform || '';
+            const arch = navigator.userAgentData?.architecture || '';
+            $('#cpuValue').textContent = cores + ' Logical Cores';
+            $('#cpuSub').textContent = (platform + (arch ? ' · ' + arch : '')).trim() || 'Unknown platform';
+
+            try {
+                const c = document.createElement('canvas');
+                const gl = c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl');
+                if (gl) {
+                    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (ext) {
+                        const renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
+                        const vendor = gl.getParameter(ext.UNMASKED_VENDOR_WEBGL);
+                        $('#gpuValue').textContent = renderer.length > 32 ? renderer.substring(0, 32) + '…' : renderer;
+                        $('#gpuSub').textContent = vendor || '';
+                    } else {
+                        $('#gpuValue').textContent = 'WebGL active';
+                        $('#gpuSub').textContent = 'Debug info unavailable';
+                    }
+                } else {
+                    $('#gpuValue').textContent = 'N/A';
+                    $('#gpuSub').textContent = 'WebGL not supported';
+                }
+            } catch (e) {
+                $('#gpuValue').textContent = 'N/A';
+            }
+
+            const memHistory = [];
+            const fpsHistory = [];
+
+            function getSparkColors() {
+                const theme = document.documentElement.dataset.theme;
+                if (theme === 'light') {
+                    return {
+                        mem: { stroke: '#059669', fill: '#047857' },
+                        fps: { stroke: '#d97706', fill: '#b45309' }
+                    };
+                }
+                return {
+                    mem: { stroke: '#00f5a0', fill: '#00c77f' },
+                    fps: { stroke: '#ffb347', fill: '#d4892a' }
+                };
+            }
+
+            function resizeCanvases() {
+                [$('#memChart'), $('#fpsChart')].forEach(canvas => {
+                    if (!canvas) return;
+                    const wrap = canvas.parentElement;
+                    const rect = wrap.getBoundingClientRect();
+                    if (rect.width === 0) return;
+                    const dpr = window.devicePixelRatio || 1;
+                    canvas.width = Math.floor(rect.width * dpr);
+                    canvas.height = Math.floor(rect.height * dpr);
+                    canvas.style.width = rect.width + 'px';
+                    canvas.style.height = rect.height + 'px';
+                    const ctx = canvas.getContext('2d');
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    canvas._logicalW = rect.width;
+                    canvas._logicalH = rect.height;
+                    canvas._ready = true;
+                });
+            }
+
+            function updateMem() {
+                if (performance.memory) {
+                    const used = performance.memory.usedJSHeapSize;
+                    const limit = performance.memory.jsHeapSizeLimit;
+                    const usedMB = (used / 1048576).toFixed(1);
+                    const limitMB = (limit / 1048576).toFixed(0);
+                    const pct = (used / limit) * 100;
+                    $('#memValue').textContent = usedMB + ' / ' + limitMB + ' MB';
+                    const bar = $('#memBar');
+                    bar.style.width = pct.toFixed(1) + '%';
+                    bar.className = 'tele-bar-fill' + (pct > 80 ? ' warn' : '');
+                    memHistory.push(pct);
+                    if (memHistory.length > 50) memHistory.shift();
+                    const colors = getSparkColors();
+                    drawSparkline($('#memChart'), memHistory, colors.mem.stroke, colors.mem.fill);
+                } else {
+                    $('#memValue').textContent = 'API unavailable';
+                }
+            }
+
+            let frameCount = 0;
+            let lastFpsTime = performance.now();
+
+            function fpsLoop(now) {
+                frameCount++;
+                if (now - lastFpsTime >= 1000) {
+                    const fps = Math.round(frameCount * 1000 / (now - lastFpsTime));
+                    fpsHistory.push(fps);
+                    if (fpsHistory.length > 50) fpsHistory.shift();
+                    $('#fpsValue').textContent = fps + ' FPS';
+                    const colors = getSparkColors();
+                    drawSparkline($('#fpsChart'), fpsHistory, colors.fps.stroke, colors.fps.fill);
+                    frameCount = 0;
+                    lastFpsTime = now;
+                }
+                requestAnimationFrame(fpsLoop);
+            }
+            requestAnimationFrame(fpsLoop);
+
+            function drawSparkline(canvas, data, color, fillColor) {
+                if (!canvas || data.length < 2) return;
+
+                if (!canvas._ready) {
+                    const wrap = canvas.parentElement;
+                    const rect = wrap.getBoundingClientRect();
+                    if (rect.width === 0) return;
+                    const dpr = window.devicePixelRatio || 1;
+                    canvas.width = Math.floor(rect.width * dpr);
+                    canvas.height = Math.floor(rect.height * dpr);
+                    canvas.style.width = rect.width + 'px';
+                    canvas.style.height = rect.height + 'px';
+                    const ctx = canvas.getContext('2d');
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    canvas._logicalW = rect.width;
+                    canvas._logicalH = rect.height;
+                    canvas._ready = true;
+                }
+
+                const ctx = canvas.getContext('2d');
+                const w = canvas._logicalW;
+                const h = canvas._logicalH;
+
+                ctx.clearRect(0, 0, w + 1, h + 1);
+
+                const max = Math.max(...data) * 1.08 || 1;
+                const min = Math.min(...data) * 0.92;
+                const range = max - min || 1;
+                const pad = 3;
+
+                const points = data.map((v, i) => ({
+                    x: pad + (i / (data.length - 1)) * (w - pad * 2),
+                    y: pad + (1 - (v - min) / range) * (h - pad * 2)
+                }));
+
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    const prev = points[i - 1];
+                    const curr = points[i];
+                    const cpx = (prev.x + curr.x) / 2;
+                    ctx.quadraticCurveTo(prev.x, prev.y, cpx, (prev.y + curr.y) / 2);
+                }
+                const last = points[points.length - 1];
+                ctx.lineTo(last.x, last.y);
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.8;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.stroke();
+
+                ctx.lineTo(w - pad, h);
+                ctx.lineTo(pad, h);
+                ctx.closePath();
+                const grad = ctx.createLinearGradient(0, 0, 0, h);
+                grad.addColorStop(0, (fillColor || color) + '35');
+                grad.addColorStop(1, (fillColor || color) + '00');
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = color + '30';
+                ctx.fill();
+            }
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    [$('#memChart'), $('#fpsChart')].forEach(c => { if (c) c._ready = false; });
+                    resizeCanvases();
+                    const colors = getSparkColors();
+                    if (memHistory.length >= 2) drawSparkline($('#memChart'), memHistory, colors.mem.stroke, colors.mem.fill);
+                    if (fpsHistory.length >= 2) drawSparkline($('#fpsChart'), fpsHistory, colors.fps.stroke, colors.fps.fill);
+                }, 200);
+            });
+
+            setInterval(updateMem, 2000);
+            updateMem();
+        })();
+    </script>
+</body>
+</html>
