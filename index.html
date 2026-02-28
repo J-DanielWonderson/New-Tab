@@ -2068,6 +2068,153 @@
             font-style: italic;
         }
 
+
+
+        /* ══ ROUTINE PLANNER PANEL ═══════════════════════════════════ */
+        .routine-planner-panel {
+            grid-column: 1 / -1;
+            margin-top: 0.2rem;
+        }
+
+        .rp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            padding: 0.95rem 1.1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rp-title-wrap { display: flex; flex-direction: column; gap: 0.2rem; }
+        .rp-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rp-subtitle { font-size: 0.7rem; color: var(--text-muted); }
+
+        .rp-create-btn {
+            border: 1px solid rgba(192,132,252,0.45);
+            background: rgba(192,132,252,0.12);
+            color: var(--accent-purple);
+            border-radius: 10px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .rp-create-btn:hover { box-shadow: 0 0 14px rgba(192,132,252,0.25); transform: translateY(-1px); }
+
+        .rp-content { padding: 1rem 1.1rem 1.2rem; }
+        .rp-view-btns { display: none; gap: 0.5rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+        .rp-view-btn {
+            padding: 0.4rem 0.7rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .rp-view-btn.active,
+        .rp-view-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+        .rp-empty { text-align: center; padding: 2rem 0.8rem; color: var(--text-muted); font-size: 0.8rem; }
+        .rp-empty-icon { font-size: 2rem; margin-bottom: 0.45rem; opacity: 0.45; }
+
+        .rp-table-section { display: none; }
+        .rp-table-section.visible { display: block; }
+        .rp-table-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
+        .rp-table-head h3 { font-size: 0.95rem; color: var(--text-primary); }
+        .rp-delete-btn {
+            margin-left: auto;
+            border: 1px solid rgba(255,85,119,0.4);
+            color: var(--accent-red);
+            background: rgba(255,85,119,0.12);
+            border-radius: 999px;
+            padding: 0.25rem 0.65rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .rp-note { font-size: 0.68rem; color: var(--text-muted); }
+
+        .rp-table-wrap { border: 1px solid var(--border); border-radius: 16px; overflow: auto; }
+        .rp-table { width: 100%; border-collapse: collapse; min-width: 680px; }
+        .rp-table th,
+        .rp-table td { padding: 0.56rem 0.5rem; text-align: center; border-bottom: 1px solid var(--border); font-size: 0.7rem; }
+        .rp-table th { color: var(--accent-purple); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; }
+        .rp-table tr:last-child td { border-bottom: none; }
+
+        .rp-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2200;
+            background: var(--modal-overlay);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .rp-overlay.open { display: flex; }
+        .rp-dialog {
+            width: min(540px, 94vw);
+            max-height: 90vh;
+            overflow: auto;
+            border-radius: 20px;
+            background: var(--glass-bg-heavy);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+            padding: 1.1rem;
+        }
+        .rp-dialog h4 { font-size: 1rem; margin-bottom: 0.35rem; }
+        .rp-dialog-sub { color: var(--text-muted); font-size: 0.72rem; margin-bottom: 0.8rem; }
+        .rp-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .rp-choice-btn {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.9rem;
+            cursor: pointer;
+            background: var(--inset-bg);
+            color: var(--text-primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        .rp-choice-btn:hover { border-color: var(--accent-purple); }
+
+        .rp-form-group { margin-bottom: 0.7rem; }
+        .rp-form-group label { display:block; font-size:0.68rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .rp-form-group input {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.6rem;
+            background: var(--inset-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.78rem;
+        }
+        .rp-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+        .rp-btn-row { display:flex; gap: 0.5rem; margin-top: 0.8rem; }
+        .rp-btn {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 0.52rem 0.7rem;
+            cursor: pointer;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+        .rp-btn.primary { background: rgba(192,132,252,0.2); border-color: rgba(192,132,252,0.45); color: var(--accent-purple); }
+
         /* ── Responsive planner ── */
         @media (max-width: 1024px) {
             .planner-grid { grid-template-columns: 1fr; }
@@ -2286,6 +2433,64 @@
                         <!-- rendered by JS -->
                     </div>
                 </div>
+
+                <!-- ══ ROUTINE PLANNER PANEL ══ -->
+                <div class="pnl anim-enter routine-planner-panel" id="routinePlannerPanel">
+                    <div class="rp-header">
+                        <div class="rp-title-wrap">
+                            <div class="rp-title"><i class="fa-solid fa-book-open"></i> School Planner</div>
+                            <div class="rp-subtitle">Routine & Exam Timetable section</div>
+                        </div>
+                        <button class="rp-create-btn" id="rpCreateBtn">+ Create</button>
+                    </div>
+                    <div class="rp-content">
+                        <div class="rp-view-btns" id="rpViewBtns">
+                            <button class="rp-view-btn" id="rpBtnShowRoutine" data-target="routine">🗓 School Routine</button>
+                            <button class="rp-view-btn" id="rpBtnShowExam" data-target="exam">📝 Exam Timetable</button>
+                        </div>
+
+                        <div class="rp-empty" id="rpEmptyState">
+                            <div class="rp-empty-icon">🎒</div>
+                            <div>Nothing created yet. Use <strong>+ Create</strong> to add your routine or exam timetable.</div>
+                        </div>
+
+                        <div class="rp-table-section" id="rpRoutineSection">
+                            <div class="rp-table-head">
+                                <h3>🗓 School Routine</h3>
+                                <span class="rp-note" id="rpRoutineSubtitle"></span>
+                                <button class="rp-delete-btn" id="rpDeleteRoutineBtn">Delete</button>
+                            </div>
+                            <div class="rp-table-wrap">
+                                <table class="rp-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Period</th>
+                                            <th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rpRoutineBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="rp-table-section" id="rpExamSection">
+                            <div class="rp-table-head">
+                                <h3>📝 Exam Timetable</h3>
+                                <span class="rp-note" id="rpExamSubtitle"></span>
+                                <button class="rp-delete-btn" id="rpDeleteExamBtn">Delete</button>
+                            </div>
+                            <div class="rp-table-wrap">
+                                <table class="rp-table">
+                                    <thead>
+                                        <tr><th>#</th><th>Date</th><th>Day</th><th>Start Time</th><th>Duration</th><th>Subject</th></tr>
+                                    </thead>
+                                    <tbody id="rpExamBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </div>
@@ -3566,6 +3771,202 @@
 
             setInterval(updateMem, 2000);
             updateMem();
+
+
+        (function initRoutinePlannerSection() {
+            const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+            const PERIODS = 8;
+            let routineData = null;
+            let examData = [];
+            let routineEntries = new Array(40).fill('');
+            let currentRoutineStep = 0;
+
+            const overlay = document.createElement('div');
+            overlay.className = 'rp-overlay';
+            overlay.id = 'rpOverlay';
+            overlay.innerHTML = `
+                <div class="rp-dialog" id="rpChoiceDialog">
+                    <h4>Create New</h4>
+                    <div class="rp-dialog-sub">What would you like to set up?</div>
+                    <div class="rp-choice">
+                        <button class="rp-choice-btn" id="rpStartRoutine">🗓 School Routine<br><small>8 periods × 5 days</small></button>
+                        <button class="rp-choice-btn" id="rpStartExam">📝 Exam Timetable<br><small>Date · Time · Duration</small></button>
+                    </div>
+                    <div class="rp-btn-row"><button class="rp-btn" id="rpCloseChoice">Close</button></div>
+                </div>
+                <div class="rp-dialog" id="rpRoutineDialog" style="display:none;">
+                    <h4 id="rpRoutineEntryTitle">Monday · Period 1</h4>
+                    <div class="rp-dialog-sub" id="rpRoutineProgress">Entry 1 of 40</div>
+                    <div class="rp-form-group"><label>Subject Name</label><input type="text" id="rpRoutineInput" placeholder="e.g. Mathematics"></div>
+                    <div class="rp-btn-row"><button class="rp-btn" id="rpPrevRoutine">← Back</button><button class="rp-btn primary" id="rpNextRoutine">Next →</button></div>
+                </div>
+                <div class="rp-dialog" id="rpExamDialog" style="display:none;">
+                    <h4>Add Exam Entry</h4>
+                    <div class="rp-dialog-sub" id="rpExamEntryCount">Entry #1</div>
+                    <div class="rp-form-group"><label>Subject</label><input type="text" id="rpExamSubject" placeholder="e.g. Physics"></div>
+                    <div class="rp-form-row">
+                        <div class="rp-form-group"><label>Date</label><input type="date" id="rpExamDate"></div>
+                        <div class="rp-form-group"><label>Start Time</label><input type="time" id="rpExamTime"></div>
+                    </div>
+                    <div class="rp-form-group"><label>Duration</label><input type="text" id="rpExamDuration" placeholder="e.g. 3 hours"></div>
+                    <div class="rp-btn-row"><button class="rp-btn" id="rpCloseExam">Close</button><button class="rp-btn primary" id="rpAddExam">Add Entry</button></div>
+                </div>`;
+            document.body.appendChild(overlay);
+
+            const showDialog = id => {
+                ['rpChoiceDialog','rpRoutineDialog','rpExamDialog'].forEach(d => {
+                    const el = document.getElementById(d);
+                    if (el) el.style.display = d === id ? '' : 'none';
+                });
+            };
+            const openOverlay = () => overlay.classList.add('open');
+            const closeOverlay = () => overlay.classList.remove('open');
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeOverlay(); });
+
+            function renderRoutineStep() {
+                const step = currentRoutineStep;
+                const day = Math.floor(step / PERIODS);
+                const period = step % PERIODS;
+                document.getElementById('rpRoutineProgress').textContent = `Entry ${step + 1} of 40`;
+                document.getElementById('rpRoutineEntryTitle').textContent = `${DAYS[day]} · Period ${period + 1}`;
+                const input = document.getElementById('rpRoutineInput');
+                input.value = routineEntries[step] || '';
+                setTimeout(() => input.focus(), 30);
+            }
+
+            function renderRoutineTable() {
+                const tbody = document.getElementById('rpRoutineBody');
+                tbody.innerHTML = '';
+                for (let p = 0; p < PERIODS; p++) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td><strong>Period ${p + 1}</strong></td>` + routineData[p].map(x => `<td>${escHtml(x || '—')}</td>`).join('');
+                    tbody.appendChild(tr);
+                }
+                document.getElementById('rpRoutineSubtitle').textContent = '8 Periods × 5 Days — Weekly School Schedule';
+            }
+
+            function renderExamTable() {
+                const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                const tbody = document.getElementById('rpExamBody');
+                tbody.innerHTML = '';
+                examData.forEach((e, i) => {
+                    const d = new Date(`${e.date}T00:00:00`);
+                    const day = dayNames[d.getDay()];
+                    const dateStr = d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+                    const [h, m] = e.time.split(':');
+                    const hNum = parseInt(h, 10);
+                    const timeStr = `${hNum % 12 || 12}:${m} ${hNum >= 12 ? 'PM' : 'AM'}`;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${i + 1}</td><td>${dateStr}</td><td>${day}</td><td>${timeStr}</td><td>${escHtml(e.dur)}</td><td>${escHtml(e.subj)}</td>`;
+                    tbody.appendChild(tr);
+                });
+                if (!examData.length) {
+                    document.getElementById('rpExamSubtitle').textContent = '';
+                    return;
+                }
+                const fmt = d => d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+                const first = new Date(`${examData[0].date}T00:00:00`);
+                const last = new Date(`${examData[examData.length - 1].date}T00:00:00`);
+                document.getElementById('rpExamSubtitle').textContent = examData.length > 1 ? `Exam from ${fmt(first)} — ${fmt(last)} · ${examData.length} subjects` : `${fmt(first)} · 1 subject`;
+            }
+
+            function updateViewButtons() {
+                const hasRoutine = !!routineData;
+                const hasExam = examData.length > 0;
+                const wrap = document.getElementById('rpViewBtns');
+                wrap.style.display = hasRoutine || hasExam ? 'flex' : 'none';
+                document.getElementById('rpBtnShowRoutine').style.display = hasRoutine ? '' : 'none';
+                document.getElementById('rpBtnShowExam').style.display = hasExam ? '' : 'none';
+                document.getElementById('rpEmptyState').style.display = hasRoutine || hasExam ? 'none' : '';
+            }
+
+            function showTable(which) {
+                document.getElementById('rpRoutineSection').classList.remove('visible');
+                document.getElementById('rpExamSection').classList.remove('visible');
+                document.querySelectorAll('.rp-view-btn').forEach(b => b.classList.remove('active'));
+                if (which === 'routine' && routineData) {
+                    document.getElementById('rpRoutineSection').classList.add('visible');
+                    document.getElementById('rpBtnShowRoutine').classList.add('active');
+                }
+                if (which === 'exam' && examData.length) {
+                    document.getElementById('rpExamSection').classList.add('visible');
+                    document.getElementById('rpBtnShowExam').classList.add('active');
+                }
+            }
+
+            document.getElementById('rpCreateBtn').addEventListener('click', () => { showDialog('rpChoiceDialog'); openOverlay(); });
+            document.getElementById('rpCloseChoice').addEventListener('click', closeOverlay);
+
+            document.getElementById('rpStartRoutine').addEventListener('click', () => {
+                routineEntries = new Array(40).fill('');
+                currentRoutineStep = 0;
+                showDialog('rpRoutineDialog');
+                renderRoutineStep();
+            });
+            document.getElementById('rpPrevRoutine').addEventListener('click', () => {
+                if (currentRoutineStep === 0) return;
+                routineEntries[currentRoutineStep] = document.getElementById('rpRoutineInput').value.trim();
+                currentRoutineStep -= 1;
+                renderRoutineStep();
+            });
+            document.getElementById('rpNextRoutine').addEventListener('click', () => {
+                const val = document.getElementById('rpRoutineInput').value.trim();
+                if (!val) return;
+                routineEntries[currentRoutineStep] = val;
+                currentRoutineStep += 1;
+                if (currentRoutineStep >= 40) {
+                    routineData = [];
+                    for (let p = 0; p < PERIODS; p++) {
+                        routineData[p] = [];
+                        for (let d = 0; d < 5; d++) routineData[p][d] = routineEntries[d * PERIODS + p];
+                    }
+                    renderRoutineTable();
+                    updateViewButtons();
+                    showTable('routine');
+                    closeOverlay();
+                    return;
+                }
+                renderRoutineStep();
+            });
+
+            document.getElementById('rpStartExam').addEventListener('click', () => {
+                showDialog('rpExamDialog');
+                document.getElementById('rpExamEntryCount').textContent = `Entry #${examData.length + 1}`;
+            });
+            document.getElementById('rpCloseExam').addEventListener('click', closeOverlay);
+            document.getElementById('rpAddExam').addEventListener('click', () => {
+                const subj = document.getElementById('rpExamSubject').value.trim();
+                const date = document.getElementById('rpExamDate').value;
+                const time = document.getElementById('rpExamTime').value;
+                const dur = document.getElementById('rpExamDuration').value.trim();
+                if (!subj || !date || !time || !dur) return;
+                examData.push({ subj, date, time, dur });
+                examData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                renderExamTable();
+                updateViewButtons();
+                showTable('exam');
+                ['rpExamSubject','rpExamDate','rpExamTime','rpExamDuration'].forEach(id => { document.getElementById(id).value = ''; });
+                document.getElementById('rpExamEntryCount').textContent = `Entry #${examData.length + 1}`;
+            });
+
+            document.getElementById('rpBtnShowRoutine').addEventListener('click', () => showTable('routine'));
+            document.getElementById('rpBtnShowExam').addEventListener('click', () => showTable('exam'));
+            document.getElementById('rpDeleteRoutineBtn').addEventListener('click', () => {
+                routineData = null;
+                document.getElementById('rpRoutineBody').innerHTML = '';
+                document.getElementById('rpRoutineSection').classList.remove('visible');
+                updateViewButtons();
+            });
+            document.getElementById('rpDeleteExamBtn').addEventListener('click', () => {
+                examData = [];
+                document.getElementById('rpExamBody').innerHTML = '';
+                document.getElementById('rpExamSection').classList.remove('visible');
+                updateViewButtons();
+            });
+
+            updateViewButtons();
+        })();
+
         })();
     </script>
 </body>
